@@ -18,7 +18,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioDTO salvar(UsuarioDTO usuarioDTO) {
         verificaSeUsuarioJaExiste(usuarioDTO);
 
-        var usuario = new Usuario(null, usuarioDTO.nome(), usuarioDTO.login(), usuarioDTO.senha());
+            var usuario = new Usuario();
+        usuario.setNome(usuarioDTO.nome());
+        usuario.setLogin(usuarioDTO.login());
+        usuario.setSenha(usuarioDTO.senha());
+
         var novoUsuario = usuarioRepository.save(usuario);
 
         return UsuarioDTO.convertToDTO(novoUsuario);
