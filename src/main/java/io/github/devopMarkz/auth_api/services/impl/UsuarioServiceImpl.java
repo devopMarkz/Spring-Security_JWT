@@ -5,27 +5,46 @@ import io.github.devopMarkz.auth_api.models.Usuario;
 import io.github.devopMarkz.auth_api.repositories.UsuarioRepository;
 import io.github.devopMarkz.auth_api.services.UsuarioService;
 import io.github.devopMarkz.auth_api.services.exceptions.UsuarioJaExistenteException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
-    @Autowired
     private UsuarioRepository usuarioRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UsuarioDTO salvar(UsuarioDTO usuarioDTO) {
         verificaSeUsuarioJaExiste(usuarioDTO);
 
-            var usuario = new Usuario();
-        usuario.setNome(usuarioDTO.nome());
-        usuario.setLogin(usuarioDTO.login());
-        usuario.setSenha(usuarioDTO.senha());
+        var usuario = converteDtoParaUsuario(usuarioDTO);
 
         var novoUsuario = usuarioRepository.save(usuario);
 
         return UsuarioDTO.convertToDTO(novoUsuario);
+    }
+
+    private Usuario converteDtoParaUsuario(UsuarioDTO usuarioDTO) {
+        var usuario = new Usuario();
+
+        if ((usuarioDTO.id() != null)) {
+            usuario.setId(usuario.getId());
+        }
+
+        usuario.setNome(usuarioDTO.nome());
+        usuario.setLogin(usuarioDTO.login());
+        
+        var senhaEncodada = passwordEncoder.encode(usuarioDTO.senha());
+        usuario.setSenha(senhaEncodada);
+
+        return usuario;
+    }
+
+    private String encodarSenhaDoUsuario(String senha){
+        return passwordEncoder.encode(senha);
     }
 
     private void verificaSeUsuarioJaExiste(UsuarioDTO usuarioDTO) {

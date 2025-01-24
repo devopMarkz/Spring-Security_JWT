@@ -5,10 +5,7 @@ import io.github.devopMarkz.auth_api.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -24,6 +21,11 @@ public class UsuarioController implements AuxiliarController{
         var usuarioCriado = usuarioService.salvar(usuarioDTO);
         URI location = gerarURI(usuarioCriado.id());
         return ResponseEntity.created(location).body(usuarioCriado);
+    }
+
+    @GetMapping
+    public String test(){
+        return "OK";
     }
 
 }
