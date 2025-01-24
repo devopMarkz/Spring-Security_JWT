@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import io.github.devopMarkz.auth_api.dtos.AuthDTO;
-import io.github.devopMarkz.auth_api.enums.RoleEnum;
+import io.github.devopMarkz.auth_api.models.Role;
 import io.github.devopMarkz.auth_api.models.Usuario;
 import io.github.devopMarkz.auth_api.repositories.UsuarioRepository;
 import io.github.devopMarkz.auth_api.services.AutenticacaoService;
@@ -58,7 +58,7 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
     }
 
     private String gerarTokenJwt(Usuario usuario){
-        List<String> roles = usuario.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        List<String> roles = usuario.getRoles().stream().map(Role::getAuthority).toList();
         try {
             Algorithm algorithm = Algorithm.HMAC256("my-secret");
             return JWT.create()

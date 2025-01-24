@@ -8,6 +8,7 @@ import io.github.devopMarkz.auth_api.services.exceptions.UsuarioJaExistenteExcep
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
@@ -16,6 +17,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private UsuarioRepository usuarioRepository;
     private PasswordEncoder passwordEncoder;
 
+    @Transactional
     @Override
     public UsuarioDTO salvar(UsuarioDTO usuarioDTO) {
         verificaSeUsuarioJaExiste(usuarioDTO);

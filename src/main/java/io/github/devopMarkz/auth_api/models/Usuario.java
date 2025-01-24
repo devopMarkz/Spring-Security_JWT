@@ -1,12 +1,11 @@
 package io.github.devopMarkz.auth_api.models;
 
-import io.github.devopMarkz.auth_api.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,19 +31,15 @@ public class Usuario implements UserDetails {
     @Column(name = "senha")
     private String senha;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private RoleEnum role;
+    @ManyToMany
+    @JoinTable(name = "tb_usuario_role",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == RoleEnum.ADMIN){
-            return List.of(
-                    new SimpleGrantedAuthority("ROLE_ADMIN"),
-                    new SimpleGrantedAuthority("ROLE_USER")
-            );
-        }
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return roles;
     }
 
     @Override
