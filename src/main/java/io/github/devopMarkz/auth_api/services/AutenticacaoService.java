@@ -7,4 +7,6 @@ public interface AutenticacaoService extends UserDetailsService {
 
     public String obterToken(AuthDTO authDTO);
 
+    public String validarTokenJwt(String token);
+
 }
