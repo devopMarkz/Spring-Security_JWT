@@ -2,7 +2,7 @@ package io.github.devopMarkz.auth_api.config;
 
 import io.github.devopMarkz.auth_api.models.Usuario;
 import io.github.devopMarkz.auth_api.repositories.UsuarioRepository;
-import io.github.devopMarkz.auth_api.services.AutenticacaoService;
+import io.github.devopMarkz.auth_api.services.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    private AutenticacaoService autenticacaoService;
+    private TokenService tokenService;
     private UsuarioRepository usuarioRepository;
 
     @Override
@@ -29,7 +29,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = extraiTokenHeader(request);
 
         if(token != null){
-            String login = autenticacaoService.validarTokenJwt(token);
+            String login = tokenService.validarTokenJwt(token);
             Usuario usuario = usuarioRepository.findByLogin(login).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
             var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

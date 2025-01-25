@@ -1,9 +1,8 @@
 package io.github.devopMarkz.auth_api.controllers;
 
 import io.github.devopMarkz.auth_api.dtos.AuthDTO;
-import io.github.devopMarkz.auth_api.services.AutenticacaoService;
+import io.github.devopMarkz.auth_api.services.TokenService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private AuthenticationManager authenticationManager;
-    private AutenticacaoService autenticacaoService;
+    private TokenService tokenService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
@@ -25,7 +24,7 @@ public class AuthenticationController {
 
         authenticationManager.authenticate(usuarioAutenticationToken);
 
-        return autenticacaoService.obterToken(authDTO);
+        return tokenService.obterToken(authDTO);
     }
 
 }

@@ -8,12 +8,9 @@ import io.github.devopMarkz.auth_api.dtos.AuthDTO;
 import io.github.devopMarkz.auth_api.models.Role;
 import io.github.devopMarkz.auth_api.models.Usuario;
 import io.github.devopMarkz.auth_api.repositories.UsuarioRepository;
-import io.github.devopMarkz.auth_api.services.AutenticacaoService;
+import io.github.devopMarkz.auth_api.services.TokenService;
 import io.github.devopMarkz.auth_api.services.exceptions.UsuarioInexistenteException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -22,15 +19,10 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
-public class AutenticacaoServiceImpl implements AutenticacaoService {
+public class TokenServiceImpl implements TokenService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return usuarioRepository.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
-    }
 
     @Override
     public String obterToken(AuthDTO authDTO) {
@@ -77,4 +69,5 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
                 .plusHours(8L)
                 .toInstant(ZoneOffset.of("-03:00"));
     }
+
 }
