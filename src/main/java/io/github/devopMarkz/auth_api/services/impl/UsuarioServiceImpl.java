@@ -1,6 +1,5 @@
 package io.github.devopMarkz.auth_api.services.impl;
 
-import io.github.devopMarkz.auth_api.dtos.RoleDTO;
 import io.github.devopMarkz.auth_api.dtos.UsuarioDTO;
 import io.github.devopMarkz.auth_api.models.Role;
 import io.github.devopMarkz.auth_api.models.Usuario;
