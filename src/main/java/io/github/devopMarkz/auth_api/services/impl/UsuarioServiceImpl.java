@@ -1,7 +1,10 @@
 package io.github.devopMarkz.auth_api.services.impl;
 
+import io.github.devopMarkz.auth_api.dtos.RoleDTO;
 import io.github.devopMarkz.auth_api.dtos.UsuarioDTO;
+import io.github.devopMarkz.auth_api.models.Role;
 import io.github.devopMarkz.auth_api.models.Usuario;
+import io.github.devopMarkz.auth_api.repositories.RoleRepository;
 import io.github.devopMarkz.auth_api.repositories.UsuarioRepository;
 import io.github.devopMarkz.auth_api.services.UsuarioService;
 import io.github.devopMarkz.auth_api.services.exceptions.UsuarioJaExistenteException;
@@ -10,12 +13,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
     private UsuarioRepository usuarioRepository;
     private PasswordEncoder passwordEncoder;
+    private RoleRepository roleRepository;
 
     @Transactional
     @Override
@@ -36,8 +42,11 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuario.setId(usuario.getId());
         }
 
+        List<Role> roles = usuarioDTO.roles().stream().map(roleDTO -> roleRepository.findByAuthority(roleDTO.authority())).toList();
+
         usuario.setNome(usuarioDTO.nome());
         usuario.setLogin(usuarioDTO.login());
+        usuario.setRoles(roles);
         
         var senhaEncodada = passwordEncoder.encode(usuarioDTO.senha());
         usuario.setSenha(senhaEncodada);
